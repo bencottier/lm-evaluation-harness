@@ -71,7 +71,12 @@ if __name__ == '__main__':
         print(f"{datetime.now().isoformat()}: running {model} on {TASKS}")
         model_fname = model.replace('/', '_')
         try:
-            subprocess.run(['python3', 'main.py', '--model', 'hf-causal-experimental',
+            if "THUDM/glm" in model:
+                model_class = 'hf-seq2seq'
+            else:
+                model_class = 'hf-causal-experimental'
+
+            subprocess.run(['python3', 'main.py', '--model', model_class,
                             '--model_args', f'pretrained={model},use_accelerate=True', '--tasks',
                             TASKS, '--batch_size', 'auto', '--device', 'cuda:0', '--write_out', '--output_path',
                             f'{RESULTS_DIR}/{model_fname}.json'], check=True, capture_output=True)
