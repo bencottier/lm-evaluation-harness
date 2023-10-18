@@ -78,7 +78,8 @@ class WikiText(PerplexityTask):
         return map(self._process_doc, self.dataset["validation"])
 
     def test_docs(self):
-        return map(self._process_doc, self.dataset["test"])
+        # return map(self._process_doc, self.dataset["test"])
+        return ["".join([doc['page'] for doc in self.dataset["test"]])]
 
     def _process_doc(self, doc):
         return doc["page"]

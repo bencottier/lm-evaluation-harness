@@ -248,7 +248,7 @@ def evaluate(
                 print(
                     f"Task: {task_name}; document {doc_id}; context prompt (starting on next line):\n{ctx}\n(end of prompt on previous line)"
                 )
-                print("Requests:", reqs)
+                # print("Requests:", reqs)
 
             if not isinstance(reqs, (list, tuple)):
                 reqs = [reqs]
@@ -287,6 +287,8 @@ def evaluate(
 
         print("Running", reqtype, "requests")
         resps = getattr(lm, reqtype)([req.args for req in reqs])
+        print("getattr(lm, reqtype)", getattr(lm, reqtype))
+        print("resps", resps)
         resps = [
             x if req.index is None else x[req.index] for x, req in zip(resps, reqs)
         ]

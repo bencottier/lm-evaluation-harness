@@ -222,7 +222,6 @@ class BaseLM(LM):
 
     def loglikelihood_rolling(self, requests):
         # TODO: Implement caching once we've confirmed the perplexity implementation
-
         # automatic batch size detection for vectorization
         adaptive_batch_size = None
         if self.batch_size == "auto":
@@ -258,10 +257,10 @@ class BaseLM(LM):
 
             # discard is_greedy
             string_nll = [x[0] for x in string_nll]
-
+            print("unsummed string_nll", string_nll)
             string_nll = sum(string_nll)
             loglikelihoods.append(string_nll)
-
+        
         return loglikelihoods
 
     def _loglikelihood_tokens(self, requests, disable_tqdm=False, override_bs=None):
@@ -799,11 +798,13 @@ class PerplexityTask(Task, abc.ABC):
 
     def construct_requests(self, doc, ctx):
         assert not ctx
+        print(rf.loglikelihood_rolling)
         req = rf.loglikelihood_rolling(self.doc_to_target(doc))
         return req
 
     def process_results(self, doc, results):
         (loglikelihood,) = results
+        print("Loglikelihood", loglikelihood)
         words = self.count_words(doc)
         bytes_ = self.count_bytes(doc)
         return {
@@ -890,6 +891,7 @@ class CachingLM:
                     remaining_reqs.append(req)
 
             # actually run the LM on the requests that do not have cached results
+            print("getattr(self.lm, attr) in base.py CachingLM", getattr(self.lm, attr))
             rem_res = getattr(self.lm, attr)(remaining_reqs)
 
             # stick the new ones back into the list and also cache any of the new ones

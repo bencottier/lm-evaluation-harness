@@ -101,6 +101,7 @@ def weighted_mean(items):
 
 
 def weighted_perplexity(items):
+    print("Individual raw log-likelihoods:", items)
     return math.exp(-weighted_mean(items))
 
 
